@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aura — 让界面像水一样流动</title>
+  <link rel="stylesheet" href="../assets/tokens.css" />
+  <link rel="stylesheet" href="../assets/components.css" />
+  <link rel="stylesheet" href="./landing.css" />
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header class="nav wrap" id="nav">
+    <a class="brand" href="#top">
+      <span class="brand__mark" aria-hidden>◍</span>
+      <span class="brand__name">Aura</span>
+    </a>
+    <nav class="nav__links" aria-label="主导航">
+      <a href="#features">功能</a>
+      <a href="#workflow">工作方式</a>
+      <a href="#pricing">定价</a>
+      <a href="#faq">资源</a>
+    </nav>
+    <div class="nav__actions">
+      <button class="btn btn--ghost btn--sm" id="themeBtn" aria-label="切换主题">🌙</button>
+      <a href="#pricing" class="btn btn--glass btn--sm nav__cta">登录</a>
+      <button class="btn btn--primary btn--sm" data-open>免费开始</button>
+      <button class="btn btn--ghost btn--sm nav__menu" id="menuBtn" aria-label="菜单">☰</button>
+    </div>
+  </header>
+  <div class="mobilemenu" id="mobileMenu" hidden>
+    <a href="#features">功能</a><a href="#workflow">工作方式</a><a href="#pricing">定价</a><a href="#faq">资源</a>
+  </div>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero wrap">
+      <div class="hero__copy">
+        <span class="pill">✨ 全新 Liquid Glass 视觉系统</span>
+        <h1>让界面<br/>像水一样流动</h1>
+        <p class="lede">Aura 把分析、协作与自动化装进一层会呼吸的玻璃。更少的边框，更清晰的层次，快得几乎感觉不到延迟。</p>
+        <div class="hero__cta">
+          <button class="btn btn--primary btn--lg" data-open>免费开始</button>
+          <button class="btn btn--glass btn--lg" id="demoBtn">观看演示 ▶</button>
+        </div>
+        <div class="hero__meta">无需信用卡 · 14 天全功能 · 随时取消</div>
+      </div>
+      <div class="hero__preview">
+        <div class="preview card">
+          <div class="preview__bar">
+            <span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span>
+            <span class="preview__title">Aura 控制台</span>
+          </div>
+          <div class="preview__stats">
+            <div class="stat"><span class="stat__label">活跃用户</span><span class="stat__value">12.8k</span><span class="stat__delta">+18%</span></div>
+            <div class="stat"><span class="stat__label">转化率</span><span class="stat__value">4.6%</span><span class="stat__delta">+2.1%</span></div>
+            <div class="stat"><span class="stat__label">延迟</span><span class="stat__value">38ms</span><span class="stat__delta">-9ms</span></div>
+          </div>
+          <div class="preview__chart" aria-hidden>
+            <i style="height:34%"></i><i style="height:52%"></i><i style="height:41%"></i><i style="height:66%"></i>
+            <i style="height:48%"></i><i style="height:74%"></i><i style="height:58%"></i><i style="height:88%"></i>
+            <i style="height:63%"></i><i style="height:79%"></i><i style="height:92%"></i><i style="height:70%"></i>
+          </div>
+          <div class="preview__rows">
+            <div class="row"><span class="row__av"></span><span class="row__t">设计评审 · 版本 3.2</span><span class="tag">进行中</span></div>
+            <div class="row"><span class="row__av"></span><span class="row__t">增长实验 · 落地页 A/B</span><span class="tag tag--ok">已发布</span></div>
+          </div>
+        </div>
+        <div class="float float--1 glass">▲ +24% 周活</div>
+        <div class="float float--2 glass">⚡ 0.4s 首屏</div>
+      </div>
+    </section>
+
+    <!-- 信任行 -->
+    <section class="logos wrap" aria-label="客户">
+      <span>已被 4,000+ 团队使用</span>
+      <div class="logos__row">
+        <b>Northwind</b><b>Orbit</b><b>Lumen</b><b>Kinetic</b><b>Halcyon</b>
+      </div>
+    </section>
+
+    <!-- 功能 -->
+    <section class="section wrap" id="features">
+      <div class="section__head">
+        <span class="pill">核心能力</span>
+        <h2>一切都在同一层玻璃里</h2>
+        <p class="lede">不做花哨的功能堆砌，只把最关键的三件事做到极致。</p>
+      </div>
+      <div class="grid grid--3">
+        <article class="card card--interactive feature" tabindex="0">
+          <div class="feature__ico">📊</div>
+          <h3>实时分析</h3>
+          <p>流式指标与漏斗秒级刷新，玻璃卡片里就能看懂每一次点击。</p>
+        </article>
+        <article class="card card--interactive feature" tabindex="0">
+          <div class="feature__ico">⚡</div>
+          <h3>自动化流程</h3>
+          <p>用自然语言描述规则，Aura 自动编排任务并回报结果。</p>
+        </article>
+        <article class="card card--interactive feature" tabindex="0">
+          <div class="feature__ico">🛡️</div>
+          <h3>企业级安全</h3>
+          <p>SSO、审计日志与区域化存储，默认开启，无需额外配置。</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 工作方式（Tabs） -->
+    <section class="section wrap" id="workflow">
+      <div class="section__head">
+        <span class="pill">工作方式</span>
+        <h2>三步开始，像调节亮度一样简单</h2>
+      </div>
+      <div class="tabs workflow" id="workflowTabs">
+        <div class="tabs__list" role="tablist" aria-label="工作方式">
+          <button class="tabs__tab" role="tab" aria-selected="true" data-tab="0">连接数据</button>
+          <button class="tabs__tab" role="tab" aria-selected="false" data-tab="1">描述目标</button>
+          <button class="tabs__tab" role="tab" aria-selected="false" data-tab="2">自动执行</button>
+          <span class="tabs__indicator" aria-hidden></span>
+        </div>
+        <div class="tabs__panel" role="tabpanel">
+          <div class="panel" data-panel="0">
+            <h3>连接你的数据源</h3>
+            <p>几十个原生连接器，扫码即连；无需写一行 ETL 代码。</p>
+          </div>
+          <div class="panel" data-panel="1" hidden>
+            <h3>用一句话描述目标</h3>
+            <p>“把上周注册但未激活的用户找出来并发送提醒”——Aura 自动理解并拆解。</p>
+          </div>
+          <div class="panel" data-panel="2" hidden>
+            <h3>坐等结果</h3>
+            <p>任务在后台运行，进度以玻璃通知实时推送，完成即刻可用。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 定价 -->
+    <section class="section wrap" id="pricing">
+      <div class="section__head">
+        <span class="pill">定价</span>
+        <h2>按团队规模，透明计价</h2>
+        <div class="seg pricing-seg" id="billingSeg" role="tablist" style="--n:2; --i:0">
+          <span class="seg__indicator" aria-hidden></span>
+          <button class="seg__item" role="tab" aria-selected="true" data-bill="m">按月</button>
+          <button class="seg__item" role="tab" aria-selected="false" data-bill="y">按年 · 省 20%</button>
+        </div>
+      </div>
+      <div class="grid grid--3">
+        <article class="card price">
+          <h3>Starter</h3>
+          <div class="price__num"><span class="amount" data-m="0" data-y="0">$0</span><span class="per">/月</span></div>
+          <p class="price__desc">个人与小项目</p>
+          <ul><li>5 个看板</li><li>基础分析</li><li>社区支持</li></ul>
+          <button class="btn btn--glass">选择</button>
+        </article>
+        <article class="card price price--hot">
+          <span class="price__badge">最受欢迎</span>
+          <h3>Growth</h3>
+          <div class="price__num"><span class="amount" data-m="29" data-y="23">$29</span><span class="per">/月</span></div>
+          <p class="price__desc">成长中的团队</p>
+          <ul><li>无限看板</li><li>自动化流程</li><li>优先支持</li></ul>
+          <button class="btn btn--primary">立即开始</button>
+        </article>
+        <article class="card price">
+          <h3>Scale</h3>
+          <div class="price__num"><span class="amount" data-m="89" data-y="71">$89</span><span class="per">/月</span></div>
+          <p class="price__desc">大型组织</p>
+          <ul><li>SSO / 审计</li><li>区域化存储</li><li>专属客户成功</li></ul>
+          <button class="btn btn--glass">联系销售</button>
+        </article>
+      </div>
+      <div class="card prefs">
+        <div>
+          <strong>需要加急支持？</strong>
+          <p class="muted">开启后按 4 小时 SLA 响应。</p>
+        </div>
+        <button class="switch" role="switch" aria-checked="false" data-on="false" id="prioSwitch" aria-label="加急支持"><span class="switch__thumb"></span></button>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section wrap" id="faq">
+      <div class="card cta glass--strong">
+        <h2>现在就让界面流动起来</h2>
+        <p class="lede">14 天全功能免费，之后随你决定。</p>
+        <div class="hero__cta">
+          <button class="btn btn--primary btn--lg" data-open>免费开始</button>
+          <button class="btn btn--glass btn--lg" id="toastBtn">收到一条通知试试</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <div class="brand"><span class="brand__mark" aria-hidden>◍</span><span class="brand__name">Aura</span></div>
+    <p class="muted">© 2026 Aura Labs · 用 Liquid Glass 设计系统构建</p>
+  </footer>
+
+  <!-- 浮动 Dock -->
+  <nav class="dock" aria-label="快捷导航" id="dock">
+    <button class="dock__item" aria-current="true" aria-label="首页">🏠</button>
+    <button class="dock__item" aria-label="分析">📈</button>
+    <button class="dock__item" aria-label="通知" id="dockBell">🔔</button>
+    <button class="dock__item" aria-label="设置">⚙️</button>
+  </nav>
+
+  <!-- 模态 -->
+  <div class="overlay" id="demoModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <button class="modal__close" data-close aria-label="关闭">×</button>
+      <h2 id="mTitle" class="modal__title">预约演示</h2>
+      <p id="mDesc" class="modal__desc">留下工作邮箱，我们会在 1 个工作日内联系你。</p>
+      <div class="modal__body">
+        <div class="field">
+          <label class="field__label" for="em">工作邮箱</label>
+          <div class="field__control">
+            <input id="em" class="field__input" type="email" placeholder="you@company.com" />
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--ghost" data-close>取消</button>
+        <button class="btn btn--primary" id="submitDemo">提交</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+
+  <script src="./landing.js"></script>
+</body>
+</html>

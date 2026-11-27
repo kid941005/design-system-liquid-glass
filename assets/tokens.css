@@ -1,0 +1,68 @@
+/* ============================================================
+   Liquid Glass Design System — Design Tokens
+   iOS Liquid Glass 风格；用于 React（原生 CSS 变量），也可直接用于 Vue / 原生
+   ============================================================ */
+:root{
+  /* ---------- 字体 ---------- */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+               "Segoe UI", Roboto, "Helvetica Neue", Arial,
+               "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* ---------- 颜色 · 亮色 ---------- */
+  --bg-base: #EEF2F7;
+  --bg-grad: linear-gradient(160deg, #E9EEF6 0%, #F7FAFC 100%);
+  --glass-bg: rgba(255,255,255,.55);
+  --glass-bg-strong: rgba(255,255,255,.72);
+  --glass-border: rgba(255,255,255,.65);
+  --glass-hi: rgba(255,255,255,.65);
+  --text-primary: #0A0F1A;
+  --text-secondary: rgba(10,15,26,.62);
+  --accent: #0A84FF;
+  --accent-press: #0060DF;
+  --success: #30D158;
+  --warning: #FF9F0A;
+  --danger: #FF453A;
+  --info: #64D2FF;
+
+  /* ---------- 字号 ---------- */
+  --fs-display: 48px; --fs-h1: 34px; --fs-h2: 28px; --fs-h3: 22px;
+  --fs-body-l: 17px; --fs-body: 15px; --fs-callout: 13px; --fs-caption: 12px; --fs-overline: 11px;
+  --lh-tight: 1.05; --lh-snug: 1.2; --lh-normal: 1.5;
+
+  /* ---------- 间距（4px 基准）---------- */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px;
+  --sp-6: 24px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px; --sp-16: 64px; --sp-20: 80px;
+
+  /* ---------- 栅格 ---------- */
+  --container-page: 1280px; --container-content: 1120px; --gutter: 24px;
+
+  /* ---------- 圆角 ---------- */
+  --r-xs: 6px; --r-sm: 10px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-pill: 999px;
+
+  /* ---------- 阴影 ---------- */
+  --shadow-sm: 0 1px 2px rgba(8,12,20,.06), 0 1px 1px rgba(8,12,20,.04);
+  --shadow-md: 0 8px 24px rgba(8,12,20,.10), 0 2px 6px rgba(8,12,20,.06);
+  --shadow-lg: 0 24px 60px rgba(8,12,20,.18), 0 8px 20px rgba(8,12,20,.10);
+  --glass-shadow: 0 8px 32px rgba(8,12,20,.12), 0 2px 6px rgba(8,12,20,.06);
+  --glass-inner: inset 0 1px 0 rgba(255,255,255,.65), inset 0 -1px 1px rgba(255,255,255,.08);
+
+  /* ---------- 动效 ---------- */
+  --dur-fast: 90ms; --dur-base: 160ms; --dur-med: 240ms; --dur-slow: 320ms;
+  --ease-out: cubic-bezier(.22,1,.36,1);
+  --ease-in-out: cubic-bezier(.4,0,.2,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ---------- 颜色 · 暗色 ---------- */
+.dark, [data-theme="dark"]{
+  --bg-base: #05070D;
+  --bg-grad: linear-gradient(160deg, #070B14 0%, #0C1220 100%);
+  --glass-bg: rgba(28,34,48,.55);
+  --glass-bg-strong: rgba(40,48,66,.72);
+  --glass-border: rgba(255,255,255,.12);
+  --glass-hi: rgba(255,255,255,.16);
+  --text-primary: #F5F7FB;
+  --text-secondary: rgba(245,247,251,.60);
+  --accent: #409CFF;
+}
