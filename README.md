@@ -98,3 +98,8 @@ npm run preview    # http://localhost:4173
 - 颜色 / 圆角 / 阴影一律引用 `tokens.css` 变量。
 - 新增组件请同时补 `assets/ui.tsx` 实现与 `assets/components.css` 样式，并更新本 README 的组件清单。
 - 修改 design token 时同步 `references/design-spec.md`。
+
+## Liquid Glass 2.0（v2 强化）
+- `assets/components.css` 末尾新增强玻璃层：`.glass / .card / .btn--glass / .dock` 默认带五层结构（半透明底色、30px 模糊+200% 饱和、镜面高光、边缘光、内反射/色散/颗粒）。
+- 真折射开关：`.glass--refract`（React 用 `<GlassDefs/>` + `<Glass refract/>`）；页面必须有彩色背景才能看出折射。
+- 最小强玻璃样板：`examples/skill-smoke/index.html`（仅引入 tokens+components），截图见 `examples/skill-smoke/_preview.png`。

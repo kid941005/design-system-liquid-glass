@@ -13,9 +13,31 @@ function cx(...parts: Array<string | false | null | undefined>) {
 }
 
 /* ---------------- Glass 容器 ---------------- */
-export type GlassProps = React.HTMLAttributes<HTMLDivElement> & { intensity?: "regular" | "strong" };
-export function Glass({ intensity = "regular", className, ...rest }: GlassProps) {
-  return <div className={cx("glass", intensity === "strong" && "glass--strong", className)} {...rest} />;
+export type GlassProps = React.HTMLAttributes<HTMLDivElement> & {
+  intensity?: "regular" | "strong";
+  /** 真折射（需页面根节点渲染一次 <GlassDefs/>） */
+  refract?: boolean;
+  /** 可交互：hover 抬升 + 指针高光 */
+  interactive?: boolean;
+};
+export function Glass({ intensity = "regular", refract = false, interactive = false, className, ...rest }: GlassProps) {
+  return <div className={cx("glass", intensity === "strong" && "glass--strong",
+    refract && "glass--refract", interactive && "glass--interactive", className)} {...rest} />;
+}
+
+/** 在应用根节点渲染一次，提供 #lg-distort 真折射滤镜 */
+export function GlassDefs() {
+  return (
+    <svg className="lg-defs" aria-hidden="true" focusable="false">
+      <defs>
+        <filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="turb" />
+          <feGaussianBlur in="turb" stdDeviation="2.2" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
+  );
 }
 
 /* ---------------- Button ---------------- */
@@ -321,7 +343,7 @@ export function Dock({ items, current, onSelect }: {
     if (!el) return;
     const r = el.getBoundingClientRect();
     const x = Math.min(r.width, Math.max(0, e.clientX - r.left));
-    el.style.setProperty("--dock-x", `${x - 17}px`);
+    el.style.setProperty("--dock-x", `${x - 20}px`);
     setHovering(true);
   };
 
@@ -349,7 +371,7 @@ export function Dock({ items, current, onSelect }: {
           <span key={it.key} className="dock__drop" style={{ left: dockSlot(i) - 7 }} />
         ))}
         <span className="dock__active"
-          style={{ "--dock-active-x": `${dockSlot(active) - 15}px` } as React.CSSProperties} />
+          style={{ "--dock-active-x": `${dockSlot(active) - 17}px` } as React.CSSProperties} />
         <span className="dock__droplet" />
       </div>
 

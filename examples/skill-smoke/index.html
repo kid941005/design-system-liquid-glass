@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Liquid Glass 2.0 — Smoke</title>
+<link rel="stylesheet" href="../../assets/tokens.css" />
+<link rel="stylesheet" href="../../assets/components.css" />
+<style>
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:var(--font-sans);color:#fff;overflow-x:hidden;
+    background:
+      radial-gradient(60% 50% at 12% 6%,  #7ac7ff 0%, transparent 62%),
+      radial-gradient(52% 46% at 88% 16%, #b18cff 0%, transparent 60%),
+      radial-gradient(65% 60% at 50% 108%,#6ef0c8 0%, transparent 58%),
+      linear-gradient(160deg,#0b1220 0%,#111a2e 100%);
+    min-height:100vh;}
+  .blob{position:fixed;border-radius:50%;filter:blur(40px);opacity:.85;pointer-events:none;z-index:0}
+  .b1{width:420px;height:420px;left:-80px;top:-60px;background:#2f8fff}
+  .b2{width:360px;height:360px;right:-60px;top:120px;background:#a06bff}
+  .b3{width:480px;height:480px;left:35%;bottom:-220px;background:#17e0a0}
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:28px 24px 140px}
+  .nav{display:flex;align-items:center;gap:18px;padding:12px 16px;border-radius:22px;position:sticky;top:18px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:#fff;text-decoration:none}
+  .mark{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(135deg,#7ac7ff,#0a84ff);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+  .nav .links{margin-left:auto;display:flex;gap:20px}
+  .nav a{color:rgba(255,255,255,.82);text-decoration:none;font-size:14px}
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:26px;align-items:center;margin-top:54px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600}
+  h1{font-size:var(--fs-display);line-height:1.04;letter-spacing:-.02em;margin:16px 0 14px}
+  h1 em{font-style:normal;background:linear-gradient(90deg,#8ee3ff,#c9a8ff,#7dffd0);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{font-size:17px;line-height:1.55;color:rgba(255,255,255,.78);max-width:34ch}
+  .cta{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+  .preview{padding:18px;border-radius:26px}
+  .preview__bar{display:flex;align-items:center;gap:7px;margin-bottom:14px}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .d1{background:#ff6159}.d2{background:#ffbd2e}.d3{background:#28c840}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .stat{padding:14px;border-radius:16px}
+  .stat b{display:block;font-size:22px;letter-spacing:-.01em}
+  .stat span{font-size:12px;color:rgba(255,255,255,.6)}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+  .cards .card{padding:20px;border-radius:22px}
+  .cards h3{margin:0 0 6px;font-size:16px}
+  .cards p{margin:0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.65)}
+  .field{margin-top:18px}
+  .field__label{color:rgba(255,255,255,.7)}
+  .field__control{background:rgba(255,255,255,.14)!important;border-color:rgba(255,255,255,.4)!important}
+  .field__input{color:#fff}
+  .dock{position:fixed}
+  .caption{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);z-index:2;font-size:12px;color:rgba(255,255,255,.6)}
+  @media (max-width:820px){.hero{grid-template-columns:1fr}.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<!-- 真折射 defs：全站一次 -->
+<svg class="lg-defs" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="turb"/>
+      <feGaussianBlur in="turb" stdDeviation="2.2" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="dock-goo" x="-30%" y="-60%" width="160%" height="220%" colorInterpolationFilters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="goo"/>
+      <feGaussianBlur in="goo" stdDeviation="0.6"/>
+    </filter>
+  </defs>
+</svg>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+<div class="wrap">
+  <header class="nav glass glass--refract">
+    <a class="brand" href="#"><span class="mark">◍</span> Aura</a>
+    <nav class="links"><a href="#">功能</a><a href="#">定价</a><a href="#">资源</a></nav>
+    <button class="btn btn--glass btn--sm">登录</button>
+    <button class="btn btn--primary btn--sm">免费开始</button>
+  </header>
+
+  <section class="hero">
+    <div>
+      <span class="eyebrow glass glass--refract">✨ Liquid Glass 2.0</span>
+      <h1>让界面<br/><em>像水一样流动</em></h1>
+      <p class="lede">一层会呼吸的玻璃：真实折射、边缘光、内反射与细颗粒，全部来自 tokens + components，粘贴即用。</p>
+      <div class="cta">
+        <button class="btn btn--primary btn--lg">免费开始</button>
+        <button class="btn btn--glass btn--lg">观看演示 ▶</button>
+      </div>
+      <div class="field">
+        <label class="field__label" for="e">工作邮箱</label>
+        <div class="field__control"><input id="e" class="field__input" placeholder="you@company.com" /></div>
+      </div>
+    </div>
+
+    <div class="preview glass glass--refract glass--interactive">
+      <div class="preview__bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div>
+      <div class="stats">
+        <div class="stat glass"><b>12.8k</b><span>活跃用户</span></div>
+        <div class="stat glass"><b>4.6%</b><span>转化率</span></div>
+        <div class="stat glass"><b>38ms</b><span>延迟</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cards">
+    <div class="card glass--interactive"><h3>真实折射</h3><p>SVG feDisplacementMap 让背后画面产生位移，而不是简单模糊。</p></div>
+    <div class="card glass--interactive"><h3>五层结构</h3><p>底色 / 模糊 / 镜面 / 边缘光 / 色散颗粒，缺一层就会"假"。</p></div>
+    <div class="card glass--interactive"><h3>暗色可用</h3><p>黑冰质感，靠边缘光与内高光维持层次，不塌陷。</p></div>
+  </section>
+</div>
+
+<div class="caption">← 背景彩色光斑穿过玻璃产生折射与色散</div>
+<nav class="dock glass glass--refract" aria-label="快捷导航">
+  <div class="dock__goo" aria-hidden="true">
+    <span class="dock__drop" style="left:15px"></span>
+    <span class="dock__drop" style="left:65px"></span>
+    <span class="dock__drop" style="left:115px"></span>
+    <span class="dock__active" style="transform:translateX(15px)"></span>
+  </div>
+  <button class="dock__item" aria-current="true">🏠</button>
+  <button class="dock__item">📈</button>
+  <button class="dock__item">🔔</button>
+  <button class="dock__item">⚙️</button>
+</nav>
+</body>
+</html>

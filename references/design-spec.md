@@ -100,10 +100,17 @@
 - ResizeObserver：Chrome 64+、Safari 13.1+、Firefox 69+。
 
 ## 10. Dock（液态玻璃 + 水滴融合）
-- 结构：`.dock.dock--refract` 玻璃容器 + `.dock__goo`（goo 滤镜层）+ `.dock__drop`（每图标 16px 水珠）+ `.dock__active`（30px 选中水珠）+ `.dock__droplet`（34px 指针水珠）。
-- 玻璃：`background: rgba(255,255,255,.26)`（暗色 `rgba(22,28,42,.50)`），`blur(18px) saturate(180%)`；`.dock--refract` 改用 `backdrop-filter: url(#lg-distort) saturate(180%) brightness(1.05)` 做真折射。
-- 高光：`linear-gradient(180deg, rgba(255,255,255,.42), transparent 38%)` + 顶部径向高光，`mix-blend-mode: screen`。
-- goo 滤镜：`feGaussianBlur stdDeviation=5` → `feColorMatrix` alpha 阈值 `0 0 0 20 -8` → `feGaussianBlur 0.6`；层 `opacity:.62`，重叠处形成水面张力颈部。
-- 水珠定位：`--dock-x`（指针，JS 设为 `clientX - rect.left - 17`）与 `--dock-active-x`（选中，`slotCenter(i) - 15`），元素 `transform: translateX(var(--dock-x))`。
+- 结构：`.dock.dock--refract` 玻璃容器 + `.dock__goo`（goo 滤镜层）+ `.dock__drop`（每图标 15px 水珠）+ `.dock__active`（34px 选中水珠）+ `.dock__droplet`（40px 指针水珠）。
+- 玻璃：`background: linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.07) 55%, rgba(255,255,255,.14))`（暗色 `rgba(40,48,66,.62)→rgba(22,28,42,.42)`），`blur(36px) saturate(220%) brightness(1.12)`；`.dock--refract` 改用 `backdrop-filter: url(#lg-distort) saturate(200%) brightness(1.08)` 做真折射。
+- 高光：`linear-gradient(180deg, rgba(255,255,255,.50), transparent 34%)` + 顶部径向 `rgba(255,255,255,.62)` + 底部 `rgba(10,132,255,.10)`，`mix-blend-mode: screen; opacity:.55`。
+- goo 滤镜：`feGaussianBlur stdDeviation=5` → `feColorMatrix` alpha 阈值 `0 0 0 20 -8` → `feGaussianBlur 0.6`；层 `opacity:.52`，重叠处形成水面张力颈部。
+- 水珠定位：`--dock-x`（指针，JS 设为 `clientX - rect.left - 20`）与 `--dock-active-x`（选中，`slotCenter(i) - 17`），元素 `transform: translateX(var(--dock-x))`。
 - 页面需内联 `#dock-goo` 与 `#lg-distort` 两个 SVG filter（`assets/ui.tsx` 的 Dock 已内置；原生示例见 `examples/index.html`）。
 - 降级：不支持 `backdrop-filter` 时保留半透明底色；`prefers-reduced-motion` 隐藏指针水珠。
+
+## 11. Liquid Glass 2.0（强玻璃增强层）
+- 启用：`assets/components.css` 末尾「Liquid Glass 2.0」层已内置，引入 tokens + components 即生效；不要再手写 rgba+blur 覆盖。
+- 五层：① 135° 白渐变底色 rgba(255,255,255,.42→.10→.26)；② `blur(30px) saturate(200%) brightness(1.06)`；③ `::before` 镜面高光（径向+线性，screen，opacity .72）；④ 边缘光 `inset 0 1px 1px rgba(255,255,255,.98)` + `inset 0 0 0 1px rgba(255,255,255,.26)`；⑤ 内反射/色散/颗粒（底部 inset 白光、左右 1px 冷暖色散、5% 噪点）。
+- 真折射：`.glass--refract` / `.lg--refract` 用 `backdrop-filter: url(#lg-distort) saturate(190%) brightness(1.06)`；页面须内联 `#lg-distort`（`<GlassDefs/>` 或 SKILL.md 片段）。
+- 背景前提：页面必须有彩色渐变/照片/光斑；纯白底玻璃必发灰。
+- 验收：玻璃 blur ≥24px + 1px 亮边 + 顶部 1px 内高光；暗色可读；hover/active/focus 可感知；降级不塌陷。
