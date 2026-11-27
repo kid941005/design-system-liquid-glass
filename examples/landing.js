@@ -126,13 +126,29 @@
   var dockBell = document.getElementById("dockBell");
   if (dockBell) dockBell.addEventListener("click", function () { toast("info", "新通知", "你有 3 条未读消息。"); });
 
-  /* Dock 选中态 */
-  document.querySelectorAll(".dock__item").forEach(function (b) {
-    b.addEventListener("click", function () {
-      document.querySelectorAll(".dock__item").forEach(function (x) { x.removeAttribute("aria-current"); });
-      b.setAttribute("aria-current", "true");
+  /* Dock 液态玻璃：水滴跟随 + 选中态 */
+  var dock = document.getElementById("dock");
+  if (dock) {
+    var dockItems = dock.querySelectorAll(".dock__item");
+    var setDockActive = function (i) {
+      dock.style.setProperty("--dock-active-x", (dockItems[i].offsetLeft + dockItems[i].offsetWidth / 2 - 15) + "px");
+    };
+    dock.addEventListener("pointermove", function (e) {
+      var r = dock.getBoundingClientRect();
+      var x = Math.min(r.width, Math.max(0, e.clientX - r.left));
+      dock.style.setProperty("--dock-x", (x - 17) + "px");
+      dock.classList.add("is-hovering");
     });
-  });
+    dock.addEventListener("pointerleave", function () { dock.classList.remove("is-hovering"); });
+    dockItems.forEach(function (b, i) {
+      b.addEventListener("click", function () {
+        dockItems.forEach(function (x) { x.removeAttribute("aria-current"); });
+        b.setAttribute("aria-current", "true");
+        setDockActive(i);
+      });
+    });
+    setDockActive(0);
+  }
 
   window.__toast = toast;
 })();

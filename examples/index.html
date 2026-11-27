@@ -197,8 +197,30 @@
     <p class="muted">© 2026 Aura Labs · 用 Liquid Glass 设计系统构建</p>
   </footer>
 
-  <!-- 浮动 Dock -->
-  <nav class="dock" aria-label="快捷导航" id="dock">
+  <!-- 浮动 Dock（液态玻璃 + 水滴融合） -->
+  <nav class="dock dock--refract" aria-label="快捷导航" id="dock">
+    <svg class="lg-defs" width="0" height="0" aria-hidden="true" focusable="false">
+      <defs>
+        <filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.010 0.014" numOctaves="2" seed="9" result="turb"/>
+          <feGaussianBlur in="turb" stdDeviation="2.4" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+        <filter id="dock-goo" x="-30%" y="-60%" width="160%" height="220%" colorInterpolationFilters="sRGB">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="goo"/>
+          <feGaussianBlur in="goo" stdDeviation="0.6"/>
+        </filter>
+      </defs>
+    </svg>
+    <div class="dock__goo" aria-hidden="true">
+      <span class="dock__drop" style="left:23px"></span>
+      <span class="dock__drop" style="left:73px"></span>
+      <span class="dock__drop" style="left:123px"></span>
+      <span class="dock__drop" style="left:173px"></span>
+      <span class="dock__active" style="--dock-active-x:15px"></span>
+      <span class="dock__droplet"></span>
+    </div>
     <button class="dock__item" aria-current="true" aria-label="首页">🏠</button>
     <button class="dock__item" aria-label="分析">📈</button>
     <button class="dock__item" aria-label="通知" id="dockBell">🔔</button>

@@ -302,13 +302,57 @@ export function Tabs({ tabs, value, defaultValue, onChange, children }: {
   );
 }
 
-/* ---------------- Dock ---------------- */
+/* ---------------- Dock（液态玻璃 + 水滴融合） ---------------- */
+const DOCK_ITEM = 44;
+const DOCK_GAP = 6;
+const DOCK_PAD = 8;
+const dockSlot = (i: number) => DOCK_PAD + i * (DOCK_ITEM + DOCK_GAP) + DOCK_ITEM / 2;
+
 export function Dock({ items, current, onSelect }: {
   items: { key: string; icon: React.ReactNode; label: string }[];
   current: string; onSelect: (k: string) => void;
 }) {
+  const ref = React.useRef<HTMLElement | null>(null);
+  const [hovering, setHovering] = React.useState(false);
+  const active = Math.max(0, items.findIndex((it) => it.key === current));
+
+  const onMove = (e: React.PointerEvent<HTMLElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = Math.min(r.width, Math.max(0, e.clientX - r.left));
+    el.style.setProperty("--dock-x", `${x - 17}px`);
+    setHovering(true);
+  };
+
   return (
-    <nav className="dock" aria-label="主导航">
+    <nav ref={ref} className={cx("dock", "dock--refract", hovering && "is-hovering")}
+      aria-label="主导航" onPointerMove={onMove} onPointerLeave={() => setHovering(false)}>
+      <svg className="lg-defs" aria-hidden="true" focusable="false">
+        <defs>
+          <filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.010 0.014" numOctaves="2" seed="9" result="turb" />
+            <feGaussianBlur in="turb" stdDeviation="2.4" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+          <filter id="dock-goo" x="-30%" y="-60%" width="160%" height="220%" colorInterpolationFilters="sRGB">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+            <feColorMatrix in="blur" mode="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="goo" />
+            <feGaussianBlur in="goo" stdDeviation="0.6" />
+          </filter>
+        </defs>
+      </svg>
+
+      <div className="dock__goo" aria-hidden="true">
+        {items.map((it, i) => (
+          <span key={it.key} className="dock__drop" style={{ left: dockSlot(i) - 7 }} />
+        ))}
+        <span className="dock__active"
+          style={{ "--dock-active-x": `${dockSlot(active) - 15}px` } as React.CSSProperties} />
+        <span className="dock__droplet" />
+      </div>
+
       {items.map((it) => (
         <button key={it.key} className="dock__item" title={it.label} aria-label={it.label}
           aria-current={it.key === current} onClick={() => onSelect(it.key)}>{it.icon}</button>

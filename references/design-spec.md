@@ -98,3 +98,12 @@
 - focus-visible：Chrome 86+、Safari 15.4+、Firefox 85+。
 - env(safe-area-inset-*)：iOS 11+。
 - ResizeObserver：Chrome 64+、Safari 13.1+、Firefox 69+。
+
+## 10. Dock（液态玻璃 + 水滴融合）
+- 结构：`.dock.dock--refract` 玻璃容器 + `.dock__goo`（goo 滤镜层）+ `.dock__drop`（每图标 16px 水珠）+ `.dock__active`（30px 选中水珠）+ `.dock__droplet`（34px 指针水珠）。
+- 玻璃：`background: rgba(255,255,255,.26)`（暗色 `rgba(22,28,42,.50)`），`blur(18px) saturate(180%)`；`.dock--refract` 改用 `backdrop-filter: url(#lg-distort) saturate(180%) brightness(1.05)` 做真折射。
+- 高光：`linear-gradient(180deg, rgba(255,255,255,.42), transparent 38%)` + 顶部径向高光，`mix-blend-mode: screen`。
+- goo 滤镜：`feGaussianBlur stdDeviation=5` → `feColorMatrix` alpha 阈值 `0 0 0 20 -8` → `feGaussianBlur 0.6`；层 `opacity:.62`，重叠处形成水面张力颈部。
+- 水珠定位：`--dock-x`（指针，JS 设为 `clientX - rect.left - 17`）与 `--dock-active-x`（选中，`slotCenter(i) - 15`），元素 `transform: translateX(var(--dock-x))`。
+- 页面需内联 `#dock-goo` 与 `#lg-distort` 两个 SVG filter（`assets/ui.tsx` 的 Dock 已内置；原生示例见 `examples/index.html`）。
+- 降级：不支持 `backdrop-filter` 时保留半透明底色；`prefers-reduced-motion` 隐藏指针水珠。

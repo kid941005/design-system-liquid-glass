@@ -5,6 +5,7 @@
 ## 特性
 - **设计规范 token 化**：配色 / 字号 / 字重 / 间距 / 栅格 / 圆角 / 边框 / 阴影 / 动效曲线全部为 CSS 变量。
 - **玻璃效果分层**：`@supports` 降级（不支持 backdrop-filter 时退半透明纯色）；进阶「真折射」用 SVG `feTurbulence + feDisplacementMap` 扭曲背后画面，非单纯模糊。
+- **Dock 液态玻璃**：`.dock` 统一为液态玻璃 + goo 水滴融合（每图标水珠、选中水珠、指针水珠），支持真折射与降级；React 组件与原生示例行为一致。
 - **组件代码**：React（顶部含 "use client"）实现 Button / Input / Card / Switch / SegmentedControl / Modal / Toast / Tabs / Dock；另附 Vue / 原生替换说明。
 - **两套 Demo**：静态落地页（零依赖）+ React + Vite + framer-motion 交互版（真实折射 + 水滴融合 Dock）。
 - **资源清单**：references/resources.md 汇总经核查许可证的开源 UI 库 / 模板 / design skill，标注许可证与「待核实」项。
