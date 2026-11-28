@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Liquid Glass 2.0 — Smoke</title>
+<title>Liquid Glass 3.0 — Smoke</title>
 <link rel="stylesheet" href="../../assets/tokens.css" />
 <link rel="stylesheet" href="../../assets/components.css" />
 <style>
+  :root{ --lg-refract: url(#lg-distort); --lg-refract-soft: url(#lg-distort-soft); }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:var(--font-sans);color:#fff;overflow-x:hidden;
@@ -20,6 +21,9 @@
   .b1{width:420px;height:420px;left:-80px;top:-60px;background:#2f8fff}
   .b2{width:360px;height:360px;right:-60px;top:120px;background:#a06bff}
   .b3{width:480px;height:480px;left:35%;bottom:-220px;background:#17e0a0}
+  .b4{width:190px;height:190px;left:calc(50% - 210px);bottom:6px;background:#00e5ff;opacity:.55}
+  .b5{width:170px;height:170px;right:calc(50% - 210px);bottom:28px;background:#ff2fb3;opacity:.5}
+  .b6{width:130px;height:130px;left:calc(50% - 50px);bottom:70px;background:#ffe600;opacity:.42}
   .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:28px 24px 140px}
   .nav{display:flex;align-items:center;gap:18px;padding:12px 16px;border-radius:22px;position:sticky;top:18px}
   .brand{display:flex;align-items:center;gap:10px;font-weight:700;color:#fff;text-decoration:none}
@@ -58,7 +62,19 @@
     <filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
       <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="turb"/>
       <feGaussianBlur in="turb" stdDeviation="2.2" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+      <feColorMatrix in="disp" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/>
+      <feOffset in="r" dx="1.2" dy="0" result="r2"/>
+      <feColorMatrix in="disp" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
+      <feColorMatrix in="disp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/>
+      <feOffset in="b" dx="-1.2" dy="0" result="b2"/>
+      <feBlend in="r2" in2="g" mode="screen" result="rg"/>
+      <feBlend in="rg" in2="b2" mode="screen"/>
+    </filter>
+    <filter id="lg-distort-soft" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.014 0.018" numOctaves="2" seed="5" result="turb"/>
+      <feGaussianBlur in="turb" stdDeviation="1.4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
     <filter id="dock-goo" x="-30%" y="-60%" width="160%" height="220%" colorInterpolationFilters="sRGB">
       <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
@@ -67,7 +83,7 @@
     </filter>
   </defs>
 </svg>
-<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div><div class="blob b5"></div><div class="blob b6"></div>
 
 <div class="wrap">
   <header class="nav glass glass--refract">
@@ -79,7 +95,7 @@
 
   <section class="hero">
     <div>
-      <span class="eyebrow glass glass--refract">✨ Liquid Glass 2.0</span>
+      <span class="eyebrow glass glass--refract">✨ Liquid Glass 3.0</span>
       <h1>让界面<br/><em>像水一样流动</em></h1>
       <p class="lede">一层会呼吸的玻璃：真实折射、边缘光、内反射与细颗粒，全部来自 tokens + components，粘贴即用。</p>
       <div class="cta">
@@ -110,7 +126,7 @@
 </div>
 
 <div class="caption">← 背景彩色光斑穿过玻璃产生折射与色散</div>
-<nav class="dock glass glass--refract" aria-label="快捷导航">
+<nav class="dock dock--refract" aria-label="快捷导航">
   <div class="dock__goo" aria-hidden="true">
     <span class="dock__drop" style="left:15px"></span>
     <span class="dock__drop" style="left:65px"></span>

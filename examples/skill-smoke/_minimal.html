@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="../../assets/tokens.css">
 <link rel="stylesheet" href="../../assets/components.css">
-<style>/* 仅背景与排版，无任何玻璃属性 */
+<style>:root{ --lg-refract: url(#lg-distort); --lg-refract-soft: url(#lg-distort-soft); } /* 仅背景与排版，无任何玻璃属性 */
 body{margin:0;min-height:100vh;display:grid;place-items:center;background:
  radial-gradient(50% 50% at 20% 20%,#7ac7ff,transparent 60%),
  radial-gradient(50% 50% at 80% 30%,#b18cff,transparent 60%),
@@ -12,6 +12,27 @@ body{margin:0;min-height:100vh;display:grid;place-items:center;background:
 .row{display:flex;gap:20px;align-items:center;flex-wrap:wrap;padding:40px}
 .box{width:220px;height:130px;display:grid;place-items:center;color:#fff}
 </style></head><body class="on-dark">
+<svg class="lg-defs" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+ <defs>
+  <filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+   <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="turb"/>
+   <feGaussianBlur in="turb" stdDeviation="2.2" result="noise"/>
+   <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+   <feColorMatrix in="disp" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/>
+   <feOffset in="r" dx="1.2" dy="0" result="r2"/>
+   <feColorMatrix in="disp" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
+   <feColorMatrix in="disp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/>
+   <feOffset in="b" dx="-1.2" dy="0" result="b2"/>
+   <feBlend in="r2" in2="g" mode="screen" result="rg"/>
+   <feBlend in="rg" in2="b2" mode="screen"/>
+  </filter>
+  <filter id="lg-distort-soft" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+   <feTurbulence type="fractalNoise" baseFrequency="0.014 0.018" numOctaves="2" seed="5" result="turb"/>
+   <feGaussianBlur in="turb" stdDeviation="1.4" result="noise"/>
+   <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+ </defs>
+</svg>
 <div class="row">
  <div class="glass box" id="g">.glass</div>
  <div class="card box" id="c">.card</div>

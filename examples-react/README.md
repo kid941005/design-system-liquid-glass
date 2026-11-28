@@ -16,7 +16,7 @@
 - src/App.jsx                组装页面（Nav / Hero / Logos / RefractionDemo / Features / WorkflowTabs / Pricing / CTA / Footer / Dock / Modal / Toasts）
 - src/state/app-state.jsx    useReducer + Context：theme/tab/billing/priority/modal/toasts/quality，及 pushToast
 - src/liquid/useLiquidSupport.js  检测 backdrop-filter 是否支持 url(#filter)
-- src/liquid/GlassFilterDefs.jsx  全局 SVG 滤镜 #lg-distort（feTurbulence + feGaussianBlur + feDisplacementMap），rAF 调制
+- src/liquid/GlassFilterDefs.jsx  全局 SVG 滤镜 #lg-distort（feTurbulence + feGaussianBlur + feDisplacementMap + RGB 色散链），rAF 调制；另有静态 #lg-distort-soft 给小控件
 - src/liquid/LiquidGlass.jsx  玻璃表面组件：折射类 + 指针跟随高光（framer useSpring/useTransform）
 - src/components/Nav.jsx      顶部玻璃导航 + 移动端菜单 + 主题/动效切换
 - src/components/Hero.jsx     首屏 + 玻璃预览卡 + 悬浮玻璃片
@@ -32,12 +32,12 @@
 若团队更偏外部库，可平移到 Zustand（把 reducer + dispatch 换成 create store，组件改用选择器），改动局限于 app-state.jsx 与各组件读取处。
 
 ## 液态玻璃实现（关键点 / 失效边界）
-1) 折射：一个全局 SVG filter，用 feTurbulence 生成噪声 → feGaussianBlur 柔化 → feDisplacementMap 以噪声位移 SourceGraphic；通过 backdrop-filter: url(#lg-distort) 作用于元素"背后的真实画面"，产生真实扭曲与拉伸（非 blur）。
-2) 颜色与光感：叠加 saturate(180%) brightness(1.05)，另有 ::before 静态高光、.lg__edge 内描边。
+1) 折射：一个全局 SVG filter，用 feTurbulence 生成噪声 → feGaussianBlur 柔化 → feDisplacementMap 以噪声位移 SourceGraphic；再按 R/G/B 分离，R feOffset +1.2px、B -1.2px，feBlend screen 合成，得到色散边；通过 backdrop-filter: url(#lg-distort) 作用于元素"背后的真实画面"，产生真实扭曲与拉伸（非 blur）。
+2) 颜色与光感：叠加 saturate(200%) brightness(1.06)，另有 ::before 静态高光、.lg__edge 内描边、inset ±1.2px 冷暖色散阴影。
 3) 流体动画：rAF 约 11fps 轻调 feTurbulence.baseFrequency 与 feDisplacementMap.scale，画面缓慢流动；quality=low 时停止。
 4) 随动：LiquidGlass 用 framer 的 useMotionValue+useSpring+useTransform 让高光跟随指针滑动，玻璃像被手指"照亮"。
 5) 可拖动透镜：RefractionDemo 中 motion.div drag，在条纹+大字背景上拖动，折射一目了然（见 _preview-refraction.png）。
-失效边界：backdrop-filter 接受 url() 目前仅 Chromium 系（Chrome/Edge/部分 Opera）稳定；Firefox、Safari 不支持，会走 fallback。
+失效边界：backdrop-filter 接受 url() 已实测于 Chromium（headless Chrome）；Safari/Firefox 未实测，预期忽略该值并保留 -webkit-backdrop-filter: blur(...) 磨砂降级（待核实）。
 
 ## 降级方案（原"待补充"决定）
 - 能力检测：useLiquidSupport 试写 backdrop-filter: url(#lg-distort)，不支持则加 .lg--fallback，回退到技能原本的 .glass 磨砂（blur+saturate），布局与交互不变。
@@ -45,7 +45,7 @@
 - 低端或禁用 backdrop-filter：仍保留半透明背景与描边，视觉退化为普通玻璃卡片。
 
 ## 与设计令牌的冲突及处理（未静默修改）
-- 技能 .glass/.card 原为 backdrop-filter: blur()；本版本将其升级为 url() 折射，并把玻璃底色透明度降到 rgba(255,255,255,.10)（暗色单独 token 为 rgba(18,24,38,.42)），以便透视背景。
+- 技能 .glass/.card 原为 backdrop-filter: blur()；本版本将其升级为 url() 折射（3.0 已默认 var(--lg-refract)），并把玻璃底色透明度降到 rgba(255,255,255,.10)（暗色单独 token 为 rgba(18,24,38,.42)），以便透视背景。
 - .lg 基础为 radius 28 / position relative；对 .nav（pill + sticky）、.dock（fixed / 22）、.float（absolute）做了半径与定位覆盖，避免破坏原布局。
 - 原 .toast 的 CSS 关键帧动画被禁用，交给 framer AnimatePresence 驱动，避免双重动画。
 

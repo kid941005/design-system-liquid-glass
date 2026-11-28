@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>Refraction Proof</title>
+<link rel="stylesheet" href="../../assets/tokens.css"><link rel="stylesheet" href="../../assets/components.css">
+<style>
+:root{--lg-refract:url(#lg-distort);--lg-refract-soft:url(#lg-distort-soft)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:
+ repeating-linear-gradient(90deg,#ff2d6f 0 14px,#ffd166 14px 28px,#00e0a4 28px 42px,#2f6bff 42px 56px,#a855f7 56px 70px);
+ display:grid;place-items:center;font-family:var(--font-sans)}
+body::before{content:"REFRACTION";position:fixed;inset:0;display:grid;place-items:center;font:900 180px/1 var(--font-sans);color:#fff;opacity:.9;letter-spacing:-6px}
+.wrap{position:relative;z-index:2;display:flex;gap:36px;align-items:center}
+.panel{width:420px;height:240px;border-radius:28px;display:grid;place-items:center;color:#fff;font:700 20px/1.4 var(--font-sans);text-shadow:0 2px 10px #0008;
+ background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.65)!important;box-shadow:inset 0 1px 1px rgba(255,255,255,.9),inset 0 0 0 1px rgba(255,255,255,.3),0 30px 70px -20px #0008!important}
+.strong{backdrop-filter:url(#lg-distort) saturate(200%) brightness(1.06)!important}
+.soft{backdrop-filter:url(#lg-distort-soft) saturate(200%) brightness(1.06)!important}
+.blur{backdrop-filter:blur(24px) saturate(200%)!important}
+</style></head><body>
+<svg class="lg-defs" aria-hidden="true" style="position:absolute;width:0;height:0"><defs>
+<filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+<feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="turb"/>
+<feGaussianBlur in="turb" stdDeviation="2.2" result="noise"/>
+<feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+<feColorMatrix in="disp" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" result="r"/><feOffset in="r" dx="1.2" result="r2"/>
+<feColorMatrix in="disp" type="matrix" values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0" result="g"/>
+<feColorMatrix in="disp" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0" result="b"/><feOffset in="b" dx="-1.2" result="b2"/>
+<feBlend in="r2" in2="g" mode="screen" result="rg"/><feBlend in="rg" in2="b2" mode="screen"/>
+</filter>
+<filter id="lg-distort-soft" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+<feTurbulence type="fractalNoise" baseFrequency="0.014 0.018" numOctaves="2" seed="5" result="turb"/>
+<feGaussianBlur in="turb" stdDeviation="1.4" result="noise"/>
+<feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+</filter></defs></svg>
+<div class="wrap">
+<div class="panel strong">scale 26 · 强折射</div>
+<div class="panel soft">scale 10 · soft</div>
+<div class="panel blur">blur 对照</div>
+</div></body></html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Liquid Glass 3.0 — Component Audit</title>
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<style>
+:root{ --lg-refract:url(#lg-distort); --lg-refract-soft:url(#lg-distort-soft); }
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;font-family:var(--font-sans);color:#fff;padding:18px 20px 12px;
+  background:
+    repeating-linear-gradient(45deg,#ff5f8f 0 18px,#ffd166 18px 36px,#06d6a0 36px 54px,#3a86ff 54px 72px,#8338ec 72px 90px);
+  background-attachment:fixed;}
+body::before{content:"LIQUID GLASS 3.0 · REFRACTION · DISPERSION · SPECULAR";position:fixed;inset:0;z-index:0;
+  display:grid;place-items:center;font:900 64px/1 var(--font-sans);letter-spacing:-2px;color:rgba(255,255,255,.55);pointer-events:none}
+h1{position:relative;z-index:2;margin:0 0 12px;font-size:22px;letter-spacing:-.02em;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+.grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.tag{font:600 11px/1 ui-monospace,monospace;color:rgba(255,255,255,.9);text-shadow:0 1px 4px #0008}
+.stage{height:86px;display:grid;place-items:center;border:1px dashed rgba(255,255,255,.45);border-radius:10px;padding:6px;min-width:0}
+.stage.tall{height:132px}
+.box{width:100%;height:100%;display:grid;place-items:center;font:700 14px/1.2 var(--font-sans)}
+.btn--glass{width:100%}
+.field{width:100%}
+.seg{width:100%}
+.switch{margin:auto}
+.tabs__list{width:100%}
+.modal{width:100%;padding:14px;border-radius:20px}
+.toast{width:100%}
+.dock{position:relative;left:auto;bottom:auto;transform:none;width:100%;justify-content:center}
+.nav{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:16px;font-size:12px}
+.mobilemenu{width:100%;padding:10px;border-radius:14px;font-size:12px}
+#out{position:relative;z-index:2;margin:12px 0 0;padding:10px;border-radius:10px;background:#0009;color:#c9f7ff;
+  font:10px/1.45 ui-monospace,monospace;white-space:pre-wrap;max-height:190px;overflow:auto}
+</style>
+</head>
+<body class="on-dark">
+<svg class="lg-defs" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
+<filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+ <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="turb"/>
+ <feGaussianBlur in="turb" stdDeviation="2.2" result="noise"/>
+ <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+ <feColorMatrix in="disp" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/>
+ <feOffset in="r" dx="1.2" dy="0" result="r2"/>
+ <feColorMatrix in="disp" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
+ <feColorMatrix in="disp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/>
+ <feOffset in="b" dx="-1.2" dy="0" result="b2"/>
+ <feBlend in="r2" in2="g" mode="screen" result="rg"/><feBlend in="rg" in2="b2" mode="screen"/>
+</filter>
+<filter id="lg-distort-soft" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+ <feTurbulence type="fractalNoise" baseFrequency="0.014 0.018" numOctaves="2" seed="5" result="turb"/>
+ <feGaussianBlur in="turb" stdDeviation="1.4" result="noise"/>
+ <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+</filter>
+</defs></svg>
+
+<h1>Liquid Glass 3.0 · 逐组件审计（背后是高频彩条，用于检查真实折射与色散）</h1>
+<div class="grid">
+  <div class="cell"><span class="tag">.glass</span><div class="stage"><div class="glass box" data-a="glass">glass</div></div></div>
+  <div class="cell"><span class="tag">.glass--strong</span><div class="stage"><div class="glass glass--strong box" data-a="strong">strong</div></div></div>
+  <div class="cell"><span class="tag">.card</span><div class="stage"><div class="card box" data-a="card">card</div></div></div>
+  <div class="cell"><span class="tag">.card--interactive</span><div class="stage"><div class="card card--interactive box" data-a="cardx">card--interactive</div></div></div>
+  <div class="cell"><span class="tag">.btn--glass</span><div class="stage"><button class="btn btn--glass" data-a="btn">btn--glass</button></div></div>
+  <div class="cell"><span class="tag">.field__control</span><div class="stage"><div class="field"><div class="field__control"><input class="field__input" placeholder="field" data-a="field"></div></div></div></div>
+  <div class="cell"><span class="tag">.seg</span><div class="stage"><div class="seg" style="--n:3;--i:0" data-a="seg"><span class="seg__indicator"></span><button class="seg__item" aria-selected="true">日</button><button class="seg__item">周</button><button class="seg__item">月</button></div></div></div>
+  <div class="cell"><span class="tag">.switch</span><div class="stage"><button class="switch" data-on="true" data-a="switch"><span class="switch__thumb"></span></button></div></div>
+  <div class="cell"><span class="tag">.tabs__list</span><div class="stage"><div class="tabs"><div class="tabs__list" style="--n:3;--i:0" data-a="tabs"><span class="tabs__indicator"></span><button class="tabs__tab" aria-selected="true">一</button><button class="tabs__tab">二</button><button class="tabs__tab">三</button></div></div></div></div>
+  <div class="cell"><span class="tag">.modal</span><div class="stage tall"><div class="modal" data-a="modal"><h3 class="modal__title">Modal</h3><p class="modal__desc">真折射 + 镜面 + 边缘光</p></div></div></div>
+  <div class="cell"><span class="tag">.toast</span><div class="stage"><div class="toast toast--success" data-a="toast"><span class="toast__icon">✓</span><div><div class="toast__title">Toast</div><div class="toast__msg">success</div></div></div></div></div>
+  <div class="cell"><span class="tag">.dock</span><div class="stage"><nav class="dock" data-a="dock"><button class="dock__item" aria-current="true">🏠</button><button class="dock__item">📈</button><button class="dock__item">🔔</button></nav></div></div>
+  <div class="cell"><span class="tag">.nav</span><div class="stage"><header class="nav" data-a="nav"><b>Aura</b><span style="margin-left:auto">功能 · 定价</span></header></div></div>
+  <div class="cell"><span class="tag">.mobilemenu</span><div class="stage"><div class="mobilemenu" data-a="mobilemenu">功能 / 定价 / 资源</div></div></div>
+</div>
+<pre id="out"></pre>
+<script>
+const sel=['.glass','.glass--strong','.card','.card--interactive','.btn--glass','.field__control','.seg','.switch','.tabs__list','.modal','.toast','.dock','.nav','.mobilemenu'];
+const lines=sel.map(s=>{const el=document.querySelector(s); if(!el) return s+' | MISSING'; const c=getComputedStyle(el); const b=getComputedStyle(el,'::before');
+ const sh=c.boxShadow||''; const hasDisp=/255, 70, 120|0, 170, 255/.test(sh);
+ return s+' | backdrop='+c.backdropFilter+' | bg='+String(c.backgroundImage).slice(0,72)+' | before='+String(b.backgroundImage).slice(0,40)+' | edge='+(/inset/.test(sh))+' | disp='+hasDisp;});
+document.getElementById('out').textContent=lines.join('\n');
+document.title='AUDIT '+lines.join(' || ')+' DOCKSH='+getComputedStyle(document.querySelector('.dock')).boxShadow;
+</script>
+</body></html>

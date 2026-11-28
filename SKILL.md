@@ -14,10 +14,10 @@ description: 当需要构建或美化 Web 界面并采用 iOS Liquid Glass（液
 
 ## 工作流（照做即可产出强液态玻璃，不要跳步）
 1. 读 `references/design-spec.md`，确认配色 / 字号 / 间距 / 圆角 / 阴影 / 动效 token。
-2. 样式引入顺序：`assets/tokens.css` → `assets/components.css` → 业务样式。components.css 末尾的「Liquid Glass 2.0」层已内置强玻璃质感，**不要再用旧的 rgba+blur 手写玻璃覆盖它**。
+2. 样式引入顺序：`assets/tokens.css` → `assets/components.css` → 业务样式。components.css 末尾的「Liquid Glass 3.0」层已内置真折射 + 镜面 + 边缘光 + 色散，**不要再用旧的 rgba+blur 手写玻璃覆盖它**。
 3. **页面背景必须有内容**：高饱和渐变 / 照片 / 彩色光斑。纯白或纯灰底上任何玻璃都会发灰、显脏。
-4. 在页面根节点渲染一次 `#lg-distort` 滤镜（React 用 `<GlassDefs/>`，HTML 用下方内联 SVG）。缺它时禁止使用 `url(#lg-distort)`。
-5. 所有浮层（导航、卡片、面板、模态、Toast、Dock）统一加 `.glass`（或 `<Glass/>`）；主视觉再加 `.glass--refract` / `<Glass refract/>` 获得真实折射。
+4. 在页面根节点渲染一次 `#lg-distort` / `#lg-distort-soft` 滤镜（React 用 `<GlassDefs/>`，HTML 用下方内联 SVG），并在 `:root` 把 `--lg-refract` 指向它们（见下方变量）。缺 defs 时**不要**设这两个变量，默认 `blur()` 会自动降级。
+5. 所有浮层（导航、卡片、面板、模态、Toast、Dock、按钮、输入框、分段、Tabs）统一加 `.glass` / `.card` / 对应组件类，3.0 已让它们全部走 `var(--lg-refract)`，不需要逐个加 `.glass--refract`；`.glass--refract` 仅用于强制某个元素折射。
 6. 组件优先用 `assets/ui.tsx`；Vue / 原生按 design-spec 末节替换。
 
 ### 背景示例（直接粘）
@@ -32,6 +32,15 @@ body{
 }
 ```
 
+### 启用真折射（两行变量，必须配合 defs）
+```css
+:root{
+  --lg-refract: url(#lg-distort);        /* 大面板 */
+  --lg-refract-soft: url(#lg-distort-soft); /* 小控件，位移更弱 */
+}
+```
+不写这两行 = 默认 `blur(30px)/blur(18px)`，安全降级。
+
 ### 真折射 defs（React 用 `<GlassDefs/>`；HTML 内联）
 ```html
 <svg class="lg-defs" aria-hidden="true" focusable="false">
@@ -39,7 +48,19 @@ body{
     <filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
       <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="turb"/>
       <feGaussianBlur in="turb" stdDeviation="2.2" result="noise"/>
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+      <feColorMatrix in="disp" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/>
+      <feOffset in="r" dx="1.2" dy="0" result="r2"/>
+      <feColorMatrix in="disp" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
+      <feColorMatrix in="disp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/>
+      <feOffset in="b" dx="-1.2" dy="0" result="b2"/>
+      <feBlend in="r2" in2="g" mode="screen" result="rg"/>
+      <feBlend in="rg" in2="b2" mode="screen"/>
+    </filter>
+    <filter id="lg-distort-soft" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.014 0.018" numOctaves="2" seed="5" result="turb"/>
+      <feGaussianBlur in="turb" stdDeviation="1.4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </defs>
 </svg>
@@ -48,16 +69,16 @@ body{
 ## 强液态玻璃配方（必须 5 层，缺一层就是"假玻璃"）
 | # | 层 | 作用 | 关键参数 |
 |---|----|------|---------|
-| 1 | 半透明底色 | 让背后颜色透出 | 135° 白渐变 rgba(255,255,255,.42→.16→.10→.26) |
-| 2 | 背景模糊 | 磨砂 + 提饱和 | blur(30px) saturate(200%) brightness(1.06) |
-| 3 | 镜面高光 | 玻璃反光感 | ::before 径向+线性白，mix-blend screen，opacity .72 |
-| 4 | 边缘光 | 厚度与轮廓 | inset 0 1px 1px rgba(255,255,255,.98) + inset 0 0 0 1px rgba(255,255,255,.26) |
-| 5 | 内反射/色散/颗粒 | 真实折射细节 | 底部 inset 白光 + 左右 1px 冷暖色散边 + 5% 噪点 |
+| 1 | 半透明底色 | 让背后颜色透出 | 135° 白渐变 rgba(255,255,255,.34→.12→.06→.20) |
+| 2 | 真折射 / 模糊 | 位移背景，不是磨砂 | `var(--lg-refract) saturate(200%) brightness(1.06)`，默认 blur(30px) |
+| 3 | 镜面高光 | 玻璃反光感 | radial 130% 100% at 16% -12% 白 .62 + 135° 白 .30→.06→.16；::before screen opacity .62 |
+| 4 | 边缘光 | 厚度与轮廓 | inset 0 1px 1px rgba(255,255,255,.96) + inset 0 0 0 1px rgba(255,255,255,.28) |
+| 5 | 内反射/色散/颗粒 | 真实折射细节 | inset ±1.2px rgba(255,70,120,.12)/rgba(0,170,255,.14) + 底部 inset 白光 + 5% 噪点 |
 | + | 彩色背景 | 玻璃"有东西可折射" | 见上方背景示例 |
 
-全部已封装在 `assets/components.css` 的 `.glass / .card / .btn--glass / .dock` 中；真折射开关是 `.glass--refract`。
+全部已封装在 `assets/components.css` 的 `.glass / .card / .btn--glass / .field__control / .modal / .toast / .seg / .tabs__list / .dock / .nav / .mobilemenu` 中；小控件自动用 `--lg-refract-soft`。Dock 另有底色 .14、蓝/粉内晕、蓝色外光晕、112° 斜向镜面与冷暖色散边，参数见 `references/design-spec.md` 第 10 节。
 
-深色页面给 `<body>` 加 `.on-dark`，表单/文本自动适配，**禁止页面再用 `!important` 覆盖玻璃背景/边框**。
+深色页面给 `<body>` 加 `.on-dark`：tokens.css 的暗色 token 已把 `.on-dark` 纳入作用域，玻璃、文字、表单、hover/focus 全部自动适配，**禁止页面再用 `!important` 覆盖玻璃背景/边框**。
 
 ## 反面清单（自查是否踩坑）
 - 纯白背景 + 只 `backdrop-filter: blur` → 灰雾，不像玻璃。
@@ -69,8 +90,8 @@ body{
 
 ## 验收检查表（交付前逐条自检）
 - [ ] 页面背景为彩色/图像/渐变，且至少 2 个彩色光斑。
-- [ ] 可见玻璃表面 ≥3 处；每处同时具备：blur ≥24px、1px 亮边、顶部 1px 内高光。
-- [ ] 主视觉（nav / hero / dock）使用 `.glass--refract` 或等效 SVG 位移滤镜。
+- [ ] 可见玻璃表面 ≥3 处；每处同时具备：真折射（或 blur ≥24px 降级）、1px 亮边、顶部 1px 内高光。
+- [ ] 页面 `:root` 已设 `--lg-refract`，且 defs 存在；gallery 中每个组件的 computed backdrop-filter 是 `url(...)` 而不是 `blur(...)`。
 - [ ] 暗色模式下玻璃仍可读，边框与高光不消失。
 - [ ] hover / active / focus-visible 三态可感知，时长取 `--dur-*`、曲线取 `--ease-*`。
 - [ ] 不支持 backdrop-filter 时降级为半透明纯色，不塌陷。
@@ -81,6 +102,7 @@ body{
 - 交互三态齐全：hover / active / focus-visible；尊重 `prefers-reduced-motion`。
 - 不支持 `backdrop-filter` 时降级为半透明纯色（components.css 已内置 `@supports`）。
 - 真折射需 SVG `feDisplacementMap`；纯 `backdrop-filter` 只能模糊+提亮，不能位移背景。
+- `backdrop-filter: url()` 已实测 Chromium；Safari/Firefox 未实测，预期忽略并走 `-webkit-backdrop-filter: blur()` 降级（**待核实**）。
 
 ## 文件结构
 ```
@@ -91,7 +113,7 @@ design-system-liquid-glass/
 │  ├─ design-spec.md
 │  └─ resources.md
 ├─ assets/
-│  ├─ tokens.css        # 亮/暗色变量 + Liquid Glass 2.0 参数
+│  ├─ tokens.css        # 亮/暗色变量 + Liquid Glass 3.0 参数
 │  ├─ components.css    # 玻璃/按钮/输入/卡片/开关/分段/模态/Toast/Tabs/Dock + 强玻璃增强层
 │  └─ ui.tsx            # React 组件（含 GlassDefs/Dock）
 ├─ examples/            # 静态落地页 demo（HTML/CSS/JS，开箱即看）

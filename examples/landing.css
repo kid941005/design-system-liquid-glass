@@ -140,6 +140,18 @@ body::after{ width:560px; height:560px; right:-140px; top:220px;
 .footer{ display:flex; align-items:center; gap:16px; padding:48px 24px 120px; flex-wrap:wrap; }
 .footer .muted{ margin:0; }
 
+/* ---------- Liquid Glass 3.0：静态页启用真折射 ---------- */
+:root{ --lg-refract: url(#lg-distort); --lg-refract-soft: url(#lg-distort-soft); }
+.nav,.mobilemenu{
+  -webkit-backdrop-filter: blur(24px) saturate(200%) brightness(1.06);
+  backdrop-filter: var(--lg-refract) saturate(200%) brightness(1.06);
+  border-color: rgba(255,255,255,.55);
+  box-shadow: var(--lg-edge), var(--lg-disp), var(--lg-depth);
+  background-image: var(--lg-specular);
+}
+.nav.is-scrolled{ background-image: var(--lg-specular); }
+.dark .nav,.dark .mobilemenu{ background-image: var(--lg-specular-dark); }
+
 /* ---------- 模态可见性 ---------- */
 .overlay{ visibility:hidden; }
 .overlay.is-open{ visibility:visible; pointer-events:auto; }

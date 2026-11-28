@@ -82,7 +82,7 @@ npm run preview    # http://localhost:4173
 ## 浏览器兼容与降级
 - 支持 `backdrop-filter`（Chrome / Edge / Safari 16+）：启用玻璃模糊 / 折射。
 - 老版 Firefox / 不支持 `backdrop-filter`：`@supports` 自动退化为半透明纯色，布局不塌陷。
-- 真实折射（`backdrop-filter: url(#filter)`）仅 Chromium 系可用；Safari/Firefox 走磨砂玻璃降级。
+- 真实折射（`backdrop-filter: url(#filter)`）已实测于 Chromium（headless Chrome）；Safari/Firefox 未实测，预期忽略该值并保留 `-webkit-backdrop-filter: blur(...)` 磨砂降级（**待核实**），布局不变。
 - 全部动效遵循 `prefers-reduced-motion`。
 
 ## 资源与致谢
@@ -99,7 +99,10 @@ npm run preview    # http://localhost:4173
 - 新增组件请同时补 `assets/ui.tsx` 实现与 `assets/components.css` 样式，并更新本 README 的组件清单。
 - 修改 design token 时同步 `references/design-spec.md`。
 
-## Liquid Glass 2.0（v2 强化）
-- `assets/components.css` 末尾新增强玻璃层：`.glass / .card / .btn--glass / .dock` 默认带五层结构（半透明底色、30px 模糊+200% 饱和、镜面高光、边缘光、内反射/色散/颗粒）。
-- 真折射开关：`.glass--refract`（React 用 `<GlassDefs/>` + `<Glass refract/>`）；页面必须有彩色背景才能看出折射。
-- 最小强玻璃样板：`examples/skill-smoke/index.html`（仅引入 tokens+components），截图见 `examples/skill-smoke/_preview.png`。
+## Liquid Glass 3.0（真折射 / 镜面 / 色散）
+- `assets/components.css` 末尾 3.0 层：`.glass / .card / .btn--glass / .field__control / .modal / .toast / .seg / .tabs__list / .dock / .nav / .mobilemenu` 全部统一走 `var(--lg-refract)`，小控件走 `var(--lg-refract-soft)`；不再需要逐个加 `.glass--refract`。
+- 页面启用只需两步：① 渲染 `#lg-distort` + `#lg-distort-soft` defs（React `<GlassDefs/>`）；② `:root{--lg-refract:url(#lg-distort);--lg-refract-soft:url(#lg-distort-soft)}`。缺 defs 时不设变量，默认 `blur()` 安全降级。
+- 色散：位移结果按 R/G/B 分离，R `+1.2px`、B `-1.2px`，`feBlend screen` 合成；soft 滤镜只位移不色散。
+- 暗色：`.on-dark` 已纳入 tokens 暗色作用域，组件层另有暗色 specular / hover / focus 覆盖。
+- Dock 单独强化：底色 `rgba(255,255,255,.14)` + 蓝/粉内晕 + 蓝色外光晕 + 112° 斜向镜面 + 冷暖色散边；详见 `references/design-spec.md` 第 10 节。
+- 逐组件审计：`examples/skill-smoke/gallery.html`（14 个组件，computed backdrop 写入页面标题）；隔离折射证明：`examples/skill-smoke/_refract-check.html`（彩条 + 大字，对比真折射/soft/blur）。

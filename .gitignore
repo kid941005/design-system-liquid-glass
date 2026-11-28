@@ -30,3 +30,8 @@ Thumbs.db
 # misc
 *.local
 coverage/
+
+# audit / local screenshots
+.audit/
+examples-react/tmp/
+examples/skill-smoke/_*.png

@@ -25,7 +25,7 @@ export function Glass({ intensity = "regular", refract = false, interactive = fa
     refract && "glass--refract", interactive && "glass--interactive", className)} {...rest} />;
 }
 
-/** 在应用根节点渲染一次，提供 #lg-distort 真折射滤镜 */
+/** 在应用根节点渲染一次，提供 #lg-distort / #lg-distort-soft 真折射滤镜 */
 export function GlassDefs() {
   return (
     <svg className="lg-defs" aria-hidden="true" focusable="false">
@@ -33,7 +33,19 @@ export function GlassDefs() {
         <filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.009 0.013" numOctaves="2" seed="7" result="turb" />
           <feGaussianBlur in="turb" stdDeviation="2.2" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" result="disp" />
+          <feColorMatrix in="disp" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r" />
+          <feOffset in="r" dx="1.2" dy="0" result="r2" />
+          <feColorMatrix in="disp" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g" />
+          <feColorMatrix in="disp" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b" />
+          <feOffset in="b" dx="-1.2" dy="0" result="b2" />
+          <feBlend in="r2" in2="g" mode="screen" result="rg" />
+          <feBlend in="rg" in2="b2" mode="screen" />
+        </filter>
+        <filter id="lg-distort-soft" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.014 0.018" numOctaves="2" seed="5" result="turb" />
+          <feGaussianBlur in="turb" stdDeviation="1.4" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </defs>
     </svg>
@@ -352,11 +364,7 @@ export function Dock({ items, current, onSelect }: {
       aria-label="主导航" onPointerMove={onMove} onPointerLeave={() => setHovering(false)}>
       <svg className="lg-defs" aria-hidden="true" focusable="false">
         <defs>
-          <filter id="lg-distort" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
-            <feTurbulence type="fractalNoise" baseFrequency="0.010 0.014" numOctaves="2" seed="9" result="turb" />
-            <feGaussianBlur in="turb" stdDeviation="2.4" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
+          {/* #lg-distort 由根节点 <GlassDefs/> 提供；Dock 只声明 goo */}
           <filter id="dock-goo" x="-30%" y="-60%" width="160%" height="220%" colorInterpolationFilters="sRGB">
             <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
             <feColorMatrix in="blur" mode="matrix"
