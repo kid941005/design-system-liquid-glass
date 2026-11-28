@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<style>/* 仅背景与排版，无任何玻璃属性 */
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:
+ radial-gradient(50% 50% at 20% 20%,#7ac7ff,transparent 60%),
+ radial-gradient(50% 50% at 80% 30%,#b18cff,transparent 60%),
+ radial-gradient(60% 60% at 50% 100%,#6ef0c8,transparent 60%),
+ linear-gradient(160deg,#0b1220,#111a2e);}
+.row{display:flex;gap:20px;align-items:center;flex-wrap:wrap;padding:40px}
+.box{width:220px;height:130px;display:grid;place-items:center;color:#fff}
+</style></head><body class="on-dark">
+<div class="row">
+ <div class="glass box" id="g">.glass</div>
+ <div class="card box" id="c">.card</div>
+ <button class="btn btn--glass" id="b">.btn--glass</button>
+ <div class="field" style="width:220px"><div class="field__control"><input class="field__input" placeholder="field"></div></div>
+</div>
+<pre id="out" style="position:fixed;left:20px;bottom:20px;color:#fff;font:12px/1.5 monospace;background:#0008;padding:12px;border-radius:10px"></pre>
+<script>
+const g=(id)=>{const s=getComputedStyle(document.getElementById(id));return [id,s.backdropFilter,s.backgroundColor,s.borderColor,s.boxShadow.split(',')[0]].join(' | ')};
+document.getElementById('out').textContent=[g('g'),g('c'),g('b')].join('\n');
+</script>
+</body></html>
